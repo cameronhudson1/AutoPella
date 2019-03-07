@@ -1,0 +1,116 @@
+WAV FORMAT
+
+This document is intended to demystify the WAV file format.  Contains all data that
+must be written to a wav file.  Byte order is Littel Endien.  The description of the data fields in below:
+
+Size				- Size of the field
+Data Type		- Cooresponding C data type
+Value				- The set/standard value to use if there is one, varied otherwise
+Description: 
+	Short description of the field if applicable
+		
+
+WAV FILE
+	HEADER CHUNK
+		sGroupID
+			Size				- 4 x 8 bits
+			Data Type		- int8_t[4]
+			Value				- "RIFF"
+			Description:
+				RIFF = Resource Interchange File Format, used for WAV/AVI file formats
+		
+		dwFileLength
+			Size				- 32 bits
+			Data Type		- uint32_t
+			Value				- varied
+			Description:
+				Total size in bytes, minus 8 to account for sGroupID and sRiffType
+		
+		sRiffType	
+			Size				- 4
+			Data Type		- int8_t[4]
+			Value				- "WAVE"
+			Description:
+				For WAV/WAVE files, this is always "WAVE"
+
+	FORMAT CHUNK
+		sGroupId
+			Size				- 4
+			Data Type		- int8_t[4]
+			Value				- "fmt "
+			Description:
+				Indicates the format chunk is below
+		
+		dwChunkSize
+			Size				- 32
+			Data Type		- uint32_t
+			Value				- varies
+			Description:
+				Length of the rest of the chunk (sGroupID and dwChunkSize noninclusive)
+		
+		wFormatTag
+			Size				- 16
+			Data Type		- uint16_t
+			Value				- 1
+			Description:
+				For WAV files, this value is lways 1 and indicates the PCM format
+		
+		wChannels
+			Size				- 16
+			Data Type		- uint16_t
+			Value				- varies
+			Description:
+				Indicates number of channels for audio.  1 for Mono, 2 for Stereo, etc...
+		
+		dwSamplesPerSec
+			Size				- 32
+			Data Type		- uint32_t
+			Value				- varies
+			Description:
+				Sampling Rate for Audio
+
+		dwAvgBytesPerSec
+			Size				- 32
+			Data Type		- uint32_t
+			Value				- dwSamplesPerSec * wBlockAlign
+			Description:
+				Number of multichannel audio frames per second.  Used to estimate memory required to play file.
+		
+		wBlockAlign
+			Size				- 16
+			Data Type		- uint16_t
+			Value				- wChannels * (dwBitesPerSample / 8)
+			Description:
+				Number of bytes in multichannel audio frame
+		
+		dwBitsPerSample
+			Size				- 32
+			Data Type		- uint32_t
+			Value				- varies (32 for our purposes)
+			Description:
+				Bit depth of audio.  Usually 8, 16. 32
+
+	DATA CHUNK
+		sGroupID
+			Size				- 4 * 8 bits
+			Data Type		- int8_t[4]
+			Value				- "data"
+			Description:
+				Indicates the data chunk is next
+		
+		wChunkSize
+			Size	 			- 32
+			Data Typedw		- uint32_t
+			Value				- varies
+			Description:
+				Length u of the array below
+		
+		sampleData
+			Size				- Length of Sample Data * 
+			Data Type		- int32_t[dwChunkSize]
+			Value				- sample data
+			Description:
+
+
+		
+		
