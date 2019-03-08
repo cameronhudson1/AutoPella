@@ -86,7 +86,7 @@ WAV FILE
 		dwBitsPerSample
 			Size				- 32
 			Data Type		- uint32_t
-			Value				- varies (32 for our purposes)
+			Value				- varies (16 for our purposes)
 			Description:
 				Bit depth of audio.  Usually 8, 16. 32
 
@@ -100,13 +100,13 @@ WAV FILE
 		
 		wChunkSize
 			Size	 			- 32
-			Data Typedw		- uint32_t
+			Data Type		- uint32_t
 			Value				- varies
 			Description:
-				Length u of the array below
+				Length of the array below
 		
 		sampleData
-			Size				- Length of Sample Data * 
+			Size				- Length of Sample Data
 			Data Type		- int32_t[dwChunkSize]
 			Value				- sample data
 			Description:
