@@ -9,11 +9,8 @@
 WavFile* createEmtpyWavFile(){
 	WavFile * wav = malloc(sizeof(WavFile));
 	
-	strcpy(wav->shGroupId, WAV_HEADER_CHUNK_ID);
 	wav->dwFileLength = BASE_WAV_SIZE; // INCREMENT AS DATA IS APPENDED
-	strcpy(wav->sRiffType, WAV_RIFF_TYPE);
 
-	strcpy(wav->sfGroupId, WAV_FORMAT_CHUNK_ID);
 	wav->dwChunkSize = FORMAT_CHUNK_SIZE;
 	wav->wFormatTag = WAV_FORMAT_PCM;
 	wav->wChannel = NUM_CHANNELS;
@@ -22,7 +19,6 @@ WavFile* createEmtpyWavFile(){
 	wav->wBlockAlign = (SAMPLE_SIZE / 8) * NUM_CHANNELS;
 	wav->dwAvgBytesPerSec = wav->wBlockAlign * SAMPLE_FREQ;
 
-	strcpy(wav->sdGroupId, WAV_DATA_CHUNK_ID);
 	wav->wChunkSize = 0;
 	wav->sampleData = malloc(sizeof(DArray));
 
@@ -32,6 +28,20 @@ WavFile* createEmtpyWavFile(){
 WavFile* createWavFile(DArray *dptr){
 	WavFile * wav = malloc(sizeof(WavFile));
 	
+	wav->dwFileLength = 
+		BASE_WAV_SIZE + (dptr->EntriesUsed * SAMPLE_SIZE); // We know the value to add
+
+	wav->dwChunkSize = FORMAT_CHUNK_SIZE;
+	wav->wFormatTag = WAV_FORMAT_PCM;
+	wav->wChannel = NUM_CHANNELS;
+	wav->dwSamplesPerSec = SAMPLE_FREQ;
+	wav->dwBitsPerSample = SAMPLE_SIZE;
+	wav->wBlockAlign = (SAMPLE_SIZE / 8) * NUM_CHANNELS;
+	wav->dwAvgBytesPerSec = wav->wBlockAlign * SAMPLE_FREQ;
+
+	wav->wChunkSize = dptr->EntriesUsed;
+	wav->sampleData = dptr;
+
 	return wav;
 } 
 
@@ -75,23 +85,25 @@ int saveWavFile(WavFile* wav, char* filename){
 	}
 
 	// HEADER CHUNK WRITE
-	fwrite(wav->shGroupId, 1, 4, fp); 							// Write shGroupId
-	writeLittleEndian32(wav->dwFileLength, fp); 		// Write dwFileLength
-	fwrite(wav->sRiffType, 1, 4, fp);								// Write sRiffType
+	fwrite(WAV_HEADER_CHUNK_ID, 1, 4, fp); 					// Write shGroupId
+	writeLittleEndian32(wav->dwFileLength, fp); 			// Write dwFileLength
+	fwrite(WAV_RIFF_TYPE, 1, 4, fp);						// Write sRiffType
 	
 	// FORMAT CHUNK WRITE
-	fwrite(wav->sfGroupId, 1, 4, fp);								// Write sfGroupId
-	writeLittleEndian32(wav->dwChunkSize, fp);			// Write dwChunkSize
+	fwrite(WAV_FORMAT_CHUNK_ID, 1, 4, fp);					// Write sfGroupId
+
+	writeLittleEndian32(wav->dwChunkSize, fp);				// Write dwChunkSize
 	writeLittleEndian16(wav->wFormatTag, fp);				// Write wFormatTag
 	writeLittleEndian16(wav->wChannel, fp);					// Write wChannel
-	writeLittleEndian32(wav->dwSamplesPerSec, fp);	// Write dwSamplesPerSec
-	writeLittleEndian32(wav->dwAvgBytesPerSec, fp);	// Write dwAvgBytesPerSec
+	writeLittleEndian32(wav->dwSamplesPerSec, fp);			// Write dwSamplesPerSec
+	writeLittleEndian32(wav->dwAvgBytesPerSec, fp);			// Write dwAvgBytesPerSec
 	writeLittleEndian16(wav->wBlockAlign, fp);				// Write wBlockAlign
-	writeLittleEndian32(wav->dwBitsPerSample, fp);	// Write dwBytesPerSample
+	writeLittleEndian32(wav->dwBitsPerSample, fp);			// Write dwBytesPerSample
 
 	// DATA CHUNK WRITE
-	fwrite(wav->sdGroupId, 1, 4, fp);								// Write sdGroupId
+	fwrite(WAV_DATA_CHUNK_ID, 1, 4, fp);					// Write sdGroupId
 	writeLittleEndian32(wav->wChunkSize, fp);				// Write wChunkSize
+
 	for(int i = 0; i < (wav->sampleData->EntriesUsed); i++){
 		writeLittleEndian32((wav->sampleData->Payload)[i], fp);
 	}
@@ -106,15 +118,22 @@ void testGenWav(){
 	createDArray(test, 100);
 	generateWave(test, A4, 5);
 
+	/*
 	for(int i = 0; i < test->Capacity; i++){
 		uint32_t val = test->Payload[i];
 		printf("%d ", val);
 	}
 	
 	printf("\n");
+	*/
+
+	WavFile *wav = createWavFile(test);
+	saveWavFile(wav, "testwav.wav");
+
 	destroyDArray(test);
 }
 
 int main(){
-	
+	testGenWav();
+	printf("Created and freed new WavFile struct!\n");
 }
