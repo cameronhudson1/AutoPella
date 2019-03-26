@@ -118,16 +118,15 @@ void testGenWav(){
 	createDArray(test, 100);
 	generateWave(test, A4, 5);
 
-	/*
+	WavFile *wav = createWavFile(test);
+
 	for(int i = 0; i < test->Capacity; i++){
 		uint32_t val = test->Payload[i];
 		printf("%d ", val);
 	}
 	
 	printf("\n");
-	*/
 
-	WavFile *wav = createWavFile(test);
 	saveWavFile(wav, "testwav.wav");
 
 	destroyDArray(test);
