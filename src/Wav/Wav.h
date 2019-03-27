@@ -7,13 +7,13 @@
 // Macros for wav format
 
 #define WAV_HEADER_CHUNK_ID "RIFF"
-#define BASE_WAV_SIZE 36
+#define BASE_WAV_SIZE 44
 #define WAV_RIFF_TYPE "WAVE"
 #define WAV_FORMAT_CHUNK_ID "fmt "
 #define FORMAT_CHUNK_SIZE 16
 #define WAV_FORMAT_PCM 1
-#define NUM_CHANNELS 2
-#define SAMPLE_SIZE 16
+#define NUM_CHANNELS 1
+#define SAMPLE_SIZE 2
 #define WAV_DATA_CHUNK_ID "data"
 
 #define SAMPLE_FREQ 44100
@@ -34,7 +34,7 @@ typedef struct{
 	uint32_t dwSamplesPerSec;			// SAMPLE_FREQ
 	uint32_t dwAvgBytesPerSec;			// 
 	uint16_t wBlockAlign;				//
-	uint32_t dwBitsPerSample;			//
+	uint16_t dwBitsPerSample;			//
 	
 	// Data Chunk
 	char sdGroupId[4];

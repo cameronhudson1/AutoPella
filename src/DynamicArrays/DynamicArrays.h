@@ -28,14 +28,14 @@
 typedef struct {
    uint32_t Capacity;    /* Max Number of elements array can hold */
    uint32_t EntriesUsed; /* Number of array elements "used"       */
-   uint32_t *Payload;   /* Pointer to array that actually holds the data  */
+   int16_t *Payload;   /* Pointer to array that actually holds the data  */
   } DArray;
 
 /***************************************************************************
  function prototypes to create, add and destroy data arrays
  **************************************************************************/
 void createDArray( DArray *DArrayPtr, uint32_t InitialSize );
-int pushToDArray( DArray *DArrayPtr, uint32_t *PayloadPtr );
+int pushToDArray( DArray *DArrayPtr, int16_t *PayloadPtr );
 void destroyDArray(DArray *DArrayPtr);
 
 #endif /* _DYNAMIC_ARRAYS_H_ */

@@ -37,7 +37,7 @@ void createDArray(DArray *DArrayHead, uint32_t InitialSize) {
 	}	
 	DArrayHead->EntriesUsed = 0;
 	DArrayHead->Capacity = InitialSize;
-	if((DArrayHead->Payload = malloc(InitialSize*sizeof(uint32_t))) == NULL){
+	if((DArrayHead->Payload = malloc(InitialSize*sizeof(int16_t))) == NULL){
 		fprintf(stderr, 
 				"Memory allocation for sample data failed!  Aborting...\n");
 		return;
@@ -58,13 +58,13 @@ void createDArray(DArray *DArrayHead, uint32_t InitialSize) {
     errors:                 - This routine will print an error message to 
                               stderror and exit with an error code 
  **************************************************************************/
-int pushToDArray(DArray *DArrayHead, uint32_t *PayloadPtr)
+int pushToDArray(DArray *DArrayHead, int16_t *PayloadPtr)
 {
 	if(DArrayHead->EntriesUsed == DArrayHead->Capacity){
 		//Must be extended
 		DArrayHead->Capacity += GROWTH_AMOUNT;
-		DArrayHead->Payload = (uint32_t *)realloc(DArrayHead->Payload, 
-					(DArrayHead->Capacity)*sizeof(uint32_t));
+		DArrayHead->Payload = (int16_t *)realloc(DArrayHead->Payload, 
+					(DArrayHead->Capacity)*sizeof(int16_t));
 		if(DArrayHead->Payload == NULL){
 			fprintf(stderr, 
 				"Memory reallocation of dynamic array failed!  Aborting...\n");
