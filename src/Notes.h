@@ -4,6 +4,9 @@
 	Date: 3/7/2019
 */
 
+#ifndef _NOTES_H
+#define _NOTES_H
+
 #define C0	16.35
 #define Db0	17.32
 #define D0	18.35
@@ -113,3 +116,4 @@
 #define Bb8	7458.62
 #define B8	7902.13
 
+#endif

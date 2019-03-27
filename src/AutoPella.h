@@ -10,7 +10,7 @@
 #include "DynamicArrays.h"
 #include "Endian.h"
 #include "Notes.h"
-
 #include "Wav.h"
+#include "GenerateWave.h"
 
 #endif

@@ -6,6 +6,16 @@
 
 // Macros for wav format
 
+#ifndef _WAV_H
+#define _WAV_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
+#include <math.h>
+#include "DynamicArrays.h"
+
 #define WAV_HEADER_CHUNK_ID "RIFF"
 #define BASE_WAV_SIZE 44
 #define WAV_RIFF_TYPE "WAVE"
@@ -42,3 +52,10 @@ typedef struct{
 	DArray *sampleData;
 	
 } WavFile;
+
+WavFile* createWavFile(DArray *dptr);
+void freeWavFile(WavFile* wav);
+int saveWavFile(WavFile* wav, char* filename);
+void printWav(WavFile * wav);
+
+#endif

@@ -5,26 +5,7 @@
 */
 
 #include <math.h>
-#include "AutoPella.h"
-
-WavFile* createEmtpyWavFile(){
-	WavFile * wav = malloc(sizeof(WavFile));
-	
-	wav->dwFileLength = BASE_WAV_SIZE; // INCREMENT AS DATA IS APPENDED
-
-	wav->dwChunkSize = FORMAT_CHUNK_SIZE;
-	wav->wFormatTag = WAV_FORMAT_PCM;
-	wav->wChannel = NUM_CHANNELS;
-	wav->dwSamplesPerSec = SAMPLE_FREQ;
-	wav->dwBitsPerSample = SAMPLE_SIZE;
-	wav->wBlockAlign = (SAMPLE_SIZE / 8) * NUM_CHANNELS;
-	wav->dwAvgBytesPerSec = wav->wBlockAlign * SAMPLE_FREQ;
-
-	wav->wChunkSize = 0;
-	wav->sampleData = malloc(sizeof(DArray));
-
-	return wav; 
-}
+#include "Wav.h"
 
 WavFile* createWavFile(DArray *dptr){
 	WavFile * wav = malloc(sizeof(WavFile));
@@ -47,32 +28,6 @@ WavFile* createWavFile(DArray *dptr){
 void freeWavFile(WavFile* wav){
 	free(wav);
 	wav = NULL;
-}
-
-int generateWave(DArray * da, uint32_t freq, uint32_t seconds){
-	// Seconds must be smaller than 97000
-	#ifdef ERR_CHECK
-
-	if(seconds > 97000){
-		fprintf(stderr, "Dude your audio is over a day long what are you doing\n");
-		return 1;
-	}
-
-	#endif
-
-	uint32_t samplesToMake = SAMPLE_FREQ * seconds;
-	double angle = (2 * freq * M_PI) / SAMPLE_FREQ;
-
-	for(int16_t currSample = 0; currSample < samplesToMake; currSample++){
-		int16_t sample = pow(2, (SAMPLE_SIZE * 4)) * sin(angle * currSample);
-		int res = pushToDArray(da, &sample);
-		if(res == -1){
-			// Error pushing to DArray
-			fprintf(stderr, "Error adding to DArray\n");
-			return 1;
-		}
-	}
-	return 0;
 }
 
 int saveWavFile(WavFile* wav, char* filename){
@@ -135,25 +90,4 @@ void printWav(WavFile * wav){
 		printf("%hd\n", val);
 	}
 	printf("\n");
-}
-
-void testGenWav(){
-	// TODO WRITE TEST FOR DARRAY
-	DArray *test = malloc(sizeof(DArray));
-	createDArray(test, 100);
-	generateWave(test, A4, 1);
-
-	WavFile *wav = createWavFile(test);
-
-	//printWav(wav);
-
-	saveWavFile(wav, "testwav.wav");
-
-	destroyDArray(test);
-	freeWavFile(wav);
-}
-
-int main(){
-	testGenWav();
-	printf("Created and freed new WavFile struct!\n");
 }

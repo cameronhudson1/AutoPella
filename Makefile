@@ -1,18 +1,18 @@
-GEN 		= generateWave.c
-WC  		= Wav.c
-UTILITY	= Endian.c DynamicArrays.c
-PRG 		= genWave
-
-CC 			= gcc
+CC 		= gcc
 CFLAGS	= -Wall -std=c99 -pedantic -DERR_CHECK -g -ggdb -O0
 
+MAIN 	= src/AutoPella.c
+GEN 	= src/generateWave.c
+UTILITY	= src/Endian.c src/DynamicArrays.c src/Wav.c
+
+PRG 	= genWave
 
 .SILENT:
 
 # make
 all:
 	echo "Compile all..."
-	$(CC) $(CFLAGS) $(WC) $(UTILITY) -o $(PRG) 
+	$(CC) $(CFLAGS) $(UTILITY) $(GEN) $(MAIN) -o $(PRG) 
 
 test:
 	echo "testing tool..."
